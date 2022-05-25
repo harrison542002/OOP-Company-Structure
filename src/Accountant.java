@@ -1,5 +1,4 @@
 public class Accountant extends BusinessEmployee {
-    protected double bonusBudget;
     private BusinessLead manager;
     protected TechnicalLead supportingTeam;
 
@@ -10,7 +9,6 @@ public class Accountant extends BusinessEmployee {
         */
 
         super(name);
-        this.bonusBudget = 0;
         this.supportingTeam = null;
     }
 
@@ -36,7 +34,7 @@ public class Accountant extends BusinessEmployee {
         total of 165000
          */
 
-        float totalSalary = 0;
+        double totalSalary = 0;
 
         //Loop over directReports list of supporting team
         for (SoftwareEngineer directReport : lead.directReports) {
@@ -47,7 +45,8 @@ public class Accountant extends BusinessEmployee {
         }
 
         //Total base salary of direct reports from supporting team and 10% of it.
-        bonusBudget = totalSalary + (totalSalary * 0.1);
+        totalSalary = (totalSalary + (totalSalary * 0.1));
+        incrementBonusBudget(totalSalary);
         supportingTeam = lead;
     }
 
@@ -60,9 +59,9 @@ public class Accountant extends BusinessEmployee {
          */
 
         //If there is still enough room for budget and has the supporting team
-        if (bonus <= bonusBudget && supportingTeam != null) {
+        if (bonus <= this.getBonusBudget() && supportingTeam != null) {
 
-            bonusBudget -= bonus;
+            this.decrementBonusBudget(bonus);
             //Approve that bonus and abstract this amount of bonus from remaining bonus budget.
 
             return true;
@@ -72,18 +71,12 @@ public class Accountant extends BusinessEmployee {
         //Otherwise, return false
     }
 
-    @Override
-    public double getBonusBudget() {
-        //Get remaining bonus budget
-
-        return bonusBudget;
-    }
 
     @Override
     public String employeeStatus() {
 
         //Define employ status
-        return getEmployeeId() + " " + getName() + "with a budget of " + String.format("%.1f", bonusBudget) + " is supporting " + supportingTeam.getName();
+        return super.employeeStatus() + " is supporting " + supportingTeam.getName();
 
     }
 
